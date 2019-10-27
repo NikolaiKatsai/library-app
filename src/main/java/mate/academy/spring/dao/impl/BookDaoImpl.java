@@ -23,7 +23,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findBookByName(String title) {
         TypedQuery<Book> query = sessionFactory.getCurrentSession()
-                .createQuery("FROM Book b WHERE b.title=:title", Book.class);
+                .createQuery("FROM Book b WHERE b.title like :title", Book.class);
         query.setParameter("title", title);
         return query.getResultList();
     }
