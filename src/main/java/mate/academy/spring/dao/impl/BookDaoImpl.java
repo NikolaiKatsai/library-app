@@ -1,6 +1,7 @@
 package mate.academy.spring.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.TypedQuery;
 
@@ -33,5 +34,15 @@ public class BookDaoImpl implements BookDao {
         TypedQuery<Book> query = sessionFactory.getCurrentSession()
                 .createQuery("from Book", Book.class);
         return query.getResultList();
+    }
+
+    @Override
+    public Optional<Book> getBookById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+
     }
 }
