@@ -51,5 +51,4 @@ public class RentController {
         modelMap.put("books", booksRentByUser);
         return "rent/rentBook";
     }
-
 }

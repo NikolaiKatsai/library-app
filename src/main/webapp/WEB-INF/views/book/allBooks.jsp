@@ -47,7 +47,7 @@
                 <a href="${pageContext.request.contextPath}/rent/getRent?bookId=${book.id}">rent</a>
             </td>
             <td>
-                <a href="${pageContext.request.contextPath}/book/delete/${book.id}">DELETE</a>
+                <a href="${pageContext.request.contextPath}/book/delete?bookId=${book.id}">DELETE</a>
             </td>
         </tr>
     </c:forEach>

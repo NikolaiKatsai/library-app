@@ -6,7 +6,7 @@ import mate.academy.spring.entity.Book;
 import mate.academy.spring.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,25 +22,22 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/all")
-    public String getAllBooks(ModelMap modelMap) {
-        modelMap.put("allBooks", bookService.listBooks());
+    public String getAllBooks(Model model) {
+        model.addAttribute("allBooks", bookService.listBooks());
         return "book/allBooks";
     }
 
     @GetMapping("/{id}")
-    public String bookInfo(@PathVariable("id") Long id, ModelMap modelMap) {
+    public String bookInfo(@PathVariable("id") Long id, Model model) {
         Optional<Book> bookById = bookService.getBookById(id);
-        if (bookById.isEmpty()) {
-            return "book/warning";
-        }
         Book book = bookById.get();
-        modelMap.put("book", book);
+        model.addAttribute("book", book);
         return "book/bookInfo";
     }
 
     @GetMapping("/find")
-    public String findByTitle(@RequestParam String title, ModelMap modelMap) {
-        modelMap.put("allBooks", bookService.findByTitle(title));
+    public String findByTitle(@RequestParam String title, Model model) {
+        model.addAttribute("allBooks", bookService.findByTitle(title));
         return "book/allBooks";
     }
 
@@ -50,14 +47,14 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String addBook(@ModelAttribute Book book, ModelMap modelMap) {
+    public String addBook(@ModelAttribute Book book, Model model) {
         bookService.add(book);
-        return getAllBooks(modelMap);
+        return getAllBooks(model);
     }
 
-    @GetMapping("/delete/{bookId}")
-    public String deleteBook(@PathVariable("bookId") Long id, ModelMap modelMap) {
+    @GetMapping("/delete")
+    public String deleteBook(@RequestParam("bookId") Long id, Model model) {
         bookService.deleteBook(id);
-        return getAllBooks(modelMap);
+        return getAllBooks(model);
     }
 }
