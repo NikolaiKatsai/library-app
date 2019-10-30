@@ -13,4 +13,5 @@ public interface RentDao {
 
     List<Rent> getBooksRentByUser(User user);
 
+    List<Book> getUserBooks(User user);
 }

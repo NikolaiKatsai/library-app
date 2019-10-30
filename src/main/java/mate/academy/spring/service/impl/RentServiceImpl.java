@@ -33,11 +33,6 @@ public class RentServiceImpl implements RentService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> getBooksRentByUser(User user) {
-        List<Book> books = new ArrayList<>();
-        List<Rent> rentByUser = rentDao.getBooksRentByUser(user);
-        for (Rent rent : rentByUser) {
-            books.add(rent.getBook());
-        }
-        return books;
+        return rentDao.getUserBooks(user);
     }
 }

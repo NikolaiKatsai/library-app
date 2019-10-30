@@ -1,6 +1,7 @@
 package mate.academy.spring.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import mate.academy.spring.dao.BookDao;
 import mate.academy.spring.entity.Book;
@@ -31,5 +32,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findByTitle(String title) {
         return bookDao.findBookByName(title);
+    }
+
+    @Override
+    public Optional<Book> getBookById(Long id) {
+        return bookDao.getBookById(id);
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        bookDao.deleteBook(id);
     }
 }
