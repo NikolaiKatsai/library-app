@@ -1,6 +1,5 @@
 package mate.academy.spring.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mate.academy.spring.dao.RentDao;

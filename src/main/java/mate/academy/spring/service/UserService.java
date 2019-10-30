@@ -1,6 +1,7 @@
 package mate.academy.spring.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import mate.academy.spring.entity.User;
 
@@ -10,4 +11,6 @@ public interface UserService {
     List<User> listUsers();
 
     User getById(Long userId);
+
+    Optional<User> getUserByUserName(String name);
 }

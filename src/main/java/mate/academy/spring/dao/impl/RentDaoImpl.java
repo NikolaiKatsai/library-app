@@ -28,7 +28,8 @@ public class RentDaoImpl implements RentDao {
     @Override
     public void returnBook(User user, Book book) {
         Query getRentQuery = sessionFactory.getCurrentSession()
-                .createQuery("from Rent r where r.user_id = :user_id and r.book_id = :book_id");
+                .createQuery("from Rent r where r.user_id = :user_id"
+                        + " and r.book_id = :book_id");
         getRentQuery.setParameter("user_id", user.getId());
         getRentQuery.setParameter("book_id", book.getId());
         Rent rent = (Rent) getRentQuery.getSingleResult();

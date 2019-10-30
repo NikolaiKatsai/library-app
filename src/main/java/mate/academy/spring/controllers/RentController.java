@@ -9,6 +9,8 @@ import mate.academy.spring.service.BookService;
 import mate.academy.spring.service.RentService;
 import mate.academy.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/rent")
 public class RentController {
-    private static final Long USER_ID = 1L;
+
     @Autowired
     private UserService userService;
 
@@ -31,24 +33,44 @@ public class RentController {
     @GetMapping("/getRent")
     public String rentBook(@RequestParam("bookId") Long bookId) {
         Optional<Book> bookOptional = bookService.getBookById(bookId);
-        User user = userService.getById(USER_ID);
-        rentService.rentBook(user, bookOptional.get());
-        return "forward:/book/allBooks";
+        if (bookOptional.isEmpty()) {
+            return "book/error";
+        }
+        Optional<User> userOptional = getCurrentUser();
+        if (userOptional.isEmpty()) {
+            return "user/error";
+        }
+        rentService.rentBook(userOptional.get(), bookOptional.get());
+        return "forward:/book/all";
     }
 
     @GetMapping("/return")
-    public String returnBook(@RequestParam("bookId") Long bookId, ModelMap modelMap) {
+    public String returnBook(@RequestParam ("bookId") Long bookId, ModelMap modelMap) {
         Optional<Book> bookOptional = bookService.getBookById(bookId);
-        User user = userService.getById(USER_ID);
-        rentService.returnBook(user, bookOptional.get());
-        return getBooksRentByUser(modelMap);
+        if (bookOptional.isEmpty()) {
+            return "book/error";
+        }
+        Optional<User> userOptional = getCurrentUser();
+        if (userOptional.isEmpty()) {
+            return "user/error";
+        }
+        rentService.returnBook(userOptional.get(), bookOptional.get());
+        return getRentedBooks(modelMap);
     }
 
     @GetMapping("/rentedBooks")
-    public String getBooksRentByUser(ModelMap modelMap) {
-        User user = userService.getById(USER_ID);
-        List<Book> booksRentByUser = rentService.getBooksRentByUser(user);
+    public String getRentedBooks(ModelMap modelMap) {
+        Optional<User> userOptional = getCurrentUser();
+        if (userOptional.isEmpty()) {
+            return "user/error";
+        }
+        List<Book> booksRentByUser = rentService.getBooksRentByUser(userOptional.get());
         modelMap.put("books", booksRentByUser);
         return "rent/rentBook";
+    }
+
+    private Optional<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userService.getUserByUserName(authentication.getName());
     }
 }
