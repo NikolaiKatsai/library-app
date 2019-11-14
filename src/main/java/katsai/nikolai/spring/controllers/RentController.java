@@ -3,6 +3,7 @@ package katsai.nikolai.spring.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import java.security.Principal;
 import katsai.nikolai.spring.entity.Book;
 import katsai.nikolai.spring.entity.User;
 import katsai.nikolai.spring.service.BookService;
@@ -14,11 +15,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/rent")
 public class RentController {
-    private static final Long USER_ID = 1L;
     @Autowired
     private UserService userService;
 
@@ -29,26 +30,31 @@ public class RentController {
     private BookService bookService;
 
     @GetMapping("/getRent")
-    public String rentBook(@RequestParam("bookId") Long bookId) {
+    @ResponseBody
+    public String rentBook(@RequestParam("bookId") Long bookId, Principal principal) {
         Optional<Book> bookOptional = bookService.getBookById(bookId);
-        User user = userService.getById(USER_ID);
-        rentService.rentBook(user, bookOptional.get());
+        Optional<User> user = userService.findByUsername(principal.getName());
+        rentService.rentBook(user.get(), bookOptional.get());
         return "forward:/book/allBooks";
     }
 
     @GetMapping("/return")
-    public String returnBook(@RequestParam("bookId") Long bookId, ModelMap modelMap) {
+    @ResponseBody
+    public String returnBook(@RequestParam("bookId") Long bookId, ModelMap modelMap,
+                             Principal principal) {
         Optional<Book> bookOptional = bookService.getBookById(bookId);
-        User user = userService.getById(USER_ID);
-        rentService.returnBook(user, bookOptional.get());
-        return getBooksRentByUser(modelMap);
+        Optional<User> user = userService.findByUsername(principal.getName());
+        rentService.returnBook(user.get(), bookOptional.get());
+        return getBooksRentByUser(modelMap, principal);
     }
 
     @GetMapping("/rentedBooks")
-    public String getBooksRentByUser(ModelMap modelMap) {
-        User user = userService.getById(USER_ID);
-        List<Book> booksRentByUser = rentService.getBooksRentByUser(user);
+    @ResponseBody
+    public String getBooksRentByUser(ModelMap modelMap, Principal principal) {
+        Optional<User> user = userService.findByUsername(principal.getName());
+        List<Book> booksRentByUser = rentService.getBooksRentByUser(user.get());
         modelMap.put("books", booksRentByUser);
         return "rent/rentBook";
     }
 }
+

@@ -1,6 +1,7 @@
 package katsai.nikolai.spring.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import katsai.nikolai.spring.dto.UserRegistrationDto;
 import katsai.nikolai.spring.service.UserService;
@@ -36,6 +37,12 @@ public class UserServiceImp implements UserService {
     @Transactional(readOnly = true)
     public User getById(Long userId) {
         return userDao.getById(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findByUsername(String name) {
+        return userDao.findByUsername(name);
     }
 
     @Override
