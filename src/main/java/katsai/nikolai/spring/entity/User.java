@@ -35,7 +35,7 @@ public class User {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "user_password")
     private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
