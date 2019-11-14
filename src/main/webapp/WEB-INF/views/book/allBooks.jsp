@@ -31,7 +31,7 @@
         <tr>
             <td>${book.id}</td>
             <td>
-                    ${book.name}
+                    ${book.title}
             </td>
             <td>
                     ${book.year}
