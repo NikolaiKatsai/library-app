@@ -1,6 +1,5 @@
 package katsai.nikolai.spring.controllers;
 
-
 import javax.validation.Valid;
 
 import katsai.nikolai.spring.dto.UserRegistrationDto;
