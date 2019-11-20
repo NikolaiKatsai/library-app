@@ -16,9 +16,9 @@ public class UserRegistrationDto {
     @NotEmpty
     private String lastName;
 
-    @ValidEmail
     @NotNull
     @NotEmpty
+    @ValidEmail
     private String email;
 
     @NotNull
